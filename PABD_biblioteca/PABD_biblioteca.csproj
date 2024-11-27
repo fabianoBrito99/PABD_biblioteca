@@ -22,4 +22,9 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NovaPasta1\" />
+    <Folder Include="NovaPasta\" />
+  </ItemGroup>
+
 </Project>
