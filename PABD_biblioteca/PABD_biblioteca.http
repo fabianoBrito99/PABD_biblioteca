@@ -1,0 +1,6 @@
+@PABD_biblioteca_HostAddress = http://localhost:5137
+
+GET {{PABD_biblioteca_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
