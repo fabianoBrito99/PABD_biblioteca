@@ -9,7 +9,7 @@ namespace PABD_biblioteca.Models
         public int Id { get; set; }
 
         [Column("nome_livro")]
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
         [Column("qtd_paginas")]
         public string? QuantidadePaginas { get; set; }

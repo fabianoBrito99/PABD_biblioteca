@@ -3,7 +3,6 @@ using PABD_biblioteca.Dtos;
 using PABD_biblioteca.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PABD_biblioteca.DataContexts;
 
 namespace PABD_biblioteca.Controllers
 {
@@ -59,7 +58,7 @@ namespace PABD_biblioteca.Controllers
         {
             try
             {
-                var livro = new Livro()
+                var livro = new Livros()
                 {
                     Nome = item.Nome,
                    
