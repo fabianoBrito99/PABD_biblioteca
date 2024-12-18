@@ -25,6 +25,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -33,6 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 
