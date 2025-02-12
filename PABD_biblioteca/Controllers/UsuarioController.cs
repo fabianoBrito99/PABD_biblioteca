@@ -7,8 +7,8 @@ using PABD_biblioteca.Models;
 namespace PABD_biblioteca.Controllers
 {
     [ApiController]
-    [Route("Usuarios")]
-    public class UsuarioController : Controller
+    [Route("api/[controller]")]
+    public class UsuarioController : ControllerBase
     {
         private readonly AppDbContext _context;
 
@@ -17,59 +17,58 @@ namespace PABD_biblioteca.Controllers
             _context = context;
         }
 
+       
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
-            return Ok(usuarios);
+            return await _context.Usuarios.ToListAsync();
         }
 
+       
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
-
             if (usuario == null)
-            {
-                return NotFound($"Usuário #{id} não encontrado.");
-            }
+                return NotFound("Usuário não encontrado.");
 
-            return Ok(usuario);
+            return usuario;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Usuario usuario)
-        {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, usuario);
-        }
+
+
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Usuario usuario)
+        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDto usuarioDto)
         {
-            if (id != usuario.Id)
-            {
-                return BadRequest("ID inconsistente.");
-            }
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+                return NotFound("Usuário não encontrado.");
 
-            _context.Entry(usuario).State = EntityState.Modified;
+            usuario.Nome = usuarioDto.Nome;
+            usuario.Email = usuarioDto.Email;
+            usuario.Senha = usuarioDto.Senha;
+            usuario.Telefone = usuarioDto.Telefone;
+            usuario.Cep = usuarioDto.Cep;
+            usuario.Rua = usuarioDto.Rua;
+            usuario.Bairro = usuarioDto.Bairro;
+            usuario.Numero = usuarioDto.Numero;
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
+      
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteUsuario(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
-
             if (usuario == null)
-            {
-                return NotFound($"Usuário #{id} não encontrado.");
-            }
+                return NotFound("Usuário não encontrado.");
 
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
