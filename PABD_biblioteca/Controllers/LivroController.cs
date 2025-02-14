@@ -1,17 +1,15 @@
-﻿using PABD_biblioteca.DataContexts;
-using PABD_biblioteca.Dtos;
-using PABD_biblioteca.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PABD_biblioteca.DataContexts;
+using PABD_biblioteca.Dtos;
+using PABD_biblioteca.Models;
 
 namespace PABD_biblioteca.Controllers
 {
     [ApiController]
-    [Route("Livros")]
-    public class LivroController : Controller
+    [Route("api/[controller]")]
+    public class LivroController : ControllerBase
     {
-
         private readonly AppDbContext _context;
 
         public LivroController(AppDbContext context)
@@ -22,107 +20,67 @@ namespace PABD_biblioteca.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var listaServidores = await _context.Livros.ToListAsync();
-
-                return Ok(listaServidores);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
+            var livros = await _context.Livros.ToListAsync();
+            return Ok(livros);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var servidor = await _context.Livros.Where(s => s.Id == id).FirstOrDefaultAsync();
+            var livro = await _context.Livros.FindAsync(id);
+            if (livro == null)
+                return NotFound("Livro não encontrado.");
 
-                if (servidor == null)
-                {
-                    return NotFound($"Servidor #{id} não encontrado");
-                }
-
-                return Ok(servidor);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
+            return Ok(livro);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] LivroDto item)
+        public async Task<IActionResult> Create([FromBody] LivroDto livroDto)
         {
-            try
+            var livro = new Livro
             {
-                var livro = new Livro()
-                {
-                    Nome = item.Nome,
-                   
-                };
+                Nome = livroDto.Nome,
+                QuantidadePaginas = livroDto.QuantidadePaginas,
+                Descricao = livroDto.Descricao,
+                AnoPublicacao = livroDto.AnoPublicacao,
+                QuantidadeEstoque = livroDto.QuantidadeEstoque
+            };
 
-                await _context.Livros.AddAsync(livro);
-                await _context.SaveChangesAsync();
+            _context.Livros.Add(livro);
+            await _context.SaveChangesAsync();
 
-                return Created("", livro);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
+            return CreatedAtAction(nameof(GetById), new { id = livro.Id }, livro);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] LivroDto item)
+        public async Task<IActionResult> Update(int id, [FromBody] LivroDto livroDto)
         {
-            try
-            {
-                var livro = await _context.Livros.FindAsync(id);
+            var livro = await _context.Livros.FindAsync(id);
+            if (livro == null)
+                return NotFound("Livro não encontrado.");
 
-                if (livro is null)
-                {
-                    return NotFound();
-                }
+            livro.Nome = livroDto.Nome;
+            livro.QuantidadePaginas = livroDto.QuantidadePaginas;
+            livro.Descricao = livroDto.Descricao;
+            livro.AnoPublicacao = livroDto.AnoPublicacao;
+            livro.QuantidadeEstoque = livroDto.QuantidadeEstoque;
 
-                livro.Nome = item.Nome;
-              
+            await _context.SaveChangesAsync();
 
-                _context.Livros.Update(livro);
-                await _context.SaveChangesAsync();
-
-                return Ok(livro);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var livro = await _context.Livros.FindAsync(id);
+            var livro = await _context.Livros.FindAsync(id);
+            if (livro == null)
+                return NotFound("Livro não encontrado.");
 
-                if (livro is null)
-                {
-                    return NotFound();
-                }
+            _context.Livros.Remove(livro);
+            await _context.SaveChangesAsync();
 
-                _context.Livros.Remove(livro);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
+            return NoContent();
         }
     }
 }
