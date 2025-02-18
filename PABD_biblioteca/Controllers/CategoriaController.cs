@@ -45,14 +45,14 @@ namespace PABD_biblioteca.Controllers
         {
             try
             {
-                _context.Categorias.Add(categoria);
+                var novaCategoria = new Categoria { Nome = categoria.Nome };
+                _context.Categorias.Add(novaCategoria);
                 await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetById), new { id = categoria.Id }, categoria);
+                return CreatedAtAction(nameof(GetById), new { id = novaCategoria.Id }, new { novaCategoria.Id, novaCategoria.Nome });
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem(ex.Message);
+                return Problem(e.Message);
             }
         }
 
@@ -60,29 +60,31 @@ namespace PABD_biblioteca.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Categoria categoria)
         {
+            if (categoria.Id == 0)
+            {
+                categoria.Id = id;
+            }
+
             if (id != categoria.Id)
             {
                 return BadRequest("ID da categoria inconsistente.");
             }
 
             var categoriaExistente = await _context.Categorias.FindAsync(id);
-
             if (categoriaExistente == null)
             {
-                return NotFound($"Categoria com ID #{id} não encontrada.");
+                return NotFound($"Categoria #{id} não encontrada.");
             }
 
             try
             {
-                categoriaExistente.Nome = categoria.Nome;
-                _context.Entry(categoriaExistente).State = EntityState.Modified;
-
+                categoriaExistente.Nome = categoria.Nome; 
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem(ex.Message);
+                return Problem(e.Message);
             }
         }
 

@@ -56,9 +56,10 @@ namespace PABD_biblioteca.Controllers
         {
             try
             {
-                _context.Autores.Add(autor);
+                var novoAutor = new Autor { Nome = autor.Nome };
+                _context.Autores.Add(novoAutor);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetById), new { id = autor.Id }, autor);
+                return CreatedAtAction(nameof(GetById), new { id = novoAutor.Id }, new { novoAutor.Id, novoAutor.Nome });
             }
             catch (Exception e)
             {
@@ -69,20 +70,31 @@ namespace PABD_biblioteca.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Autor autor)
         {
-            if (id != autor.Id)
+            if (autor.Id == 0) 
+            {
+                autor.Id = id;
+            }
+
+            if (id != autor.Id) 
             {
                 return BadRequest("ID do autor inconsistente.");
             }
 
+            var autorExistente = await _context.Autores.FindAsync(id);
+            if (autorExistente == null)
+            {
+                return NotFound($"Autor #{id} não encontrado.");
+            }
+
             try
             {
-                _context.Entry(autor).State = EntityState.Modified;
+                autorExistente.Nome = autor.Nome; 
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception e)
             {
-                return NotFound($"Autor #{id} não encontrado.");
+                return Problem(e.Message);
             }
         }
 
