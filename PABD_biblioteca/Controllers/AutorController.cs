@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PABD_biblioteca.DataContexts;
 using PABD_biblioteca.Dtos;
@@ -8,6 +9,7 @@ namespace PABD_biblioteca.Controllers
 {
     [ApiController]
     [Route("Autores")]
+    [Authorize]
     public class AutorController : Controller
     {
         private readonly AppDbContext _context;
