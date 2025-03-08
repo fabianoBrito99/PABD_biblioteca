@@ -1,0 +1,99 @@
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #cfcbcb;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: auto;
+  height: 100vh;
+  margin-bottom: 20px;
+ 
+}
+
+.logo {
+  margin-top: 60px;
+  border-radius: 50%;
+  border: 3px solid #4685fa;
+}
+
+.title {
+  color: #0457f1;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.rede{
+  margin: 10px;
+}
+
+.icon {
+  color: #003366;
+  transition: transform 0.2s;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+.entre{
+  margin: 10px;
+  padding: 10px;
+  width: 110%;
+  background: #0084ac;
+  color: aliceblue;
+}
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.button {
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+
+.buttonImage {
+  margin-left: 60px;
+  border-radius: 50%;
+}
+
+.imersao{
+
+  color: #000000;
+  margin: 5px;
+  display: flex;
+  text-align: start;
+
+}
+.EbdImage{
+  padding: 10px;
+}
